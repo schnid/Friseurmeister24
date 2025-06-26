@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>RATHAIR – Powered by Kevin Schmidt</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        #lockscreen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        #lockscreen input {
+            background: none;
+            border: none;
+            border-bottom: 2px solid #fff;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            width: 120px;
+            outline: none;
+            letter-spacing: 10px;
+        }
+        #mainpage {
+            display: none;
+            background: #ffcc00;
+            padding: 20px;
+        }
+        .admin {
+            margin-top: 40px;
+        }
+        .termin {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            color: white;
+        }
+        .kurz { background: green; }
+        .mittel { background: orange; }
+        .lang { background: red; }
+    </style>
+</head>
+<body>
+
+<div id="lockscreen">
+    <input type="password" id="code" maxlength="4" autofocus>
+</div>
+
+<div id="mainpage">
+    <h1>RATHAIR – Preisübersicht & Terminbuchung</h1>
+    <p>Hier wird später die Preisliste angezeigt...</p>
+    <button onclick="showAdmin()">🔐 Adminbereich</button>
+
+    <div id="adminpanel" class="admin" style="display:none;">
+        <h2>Adminbereich</h2>
+        <input type="password" id="adminpass" placeholder="Admin-PIN">
+        <button onclick="checkAdmin()">Login</button>
+        <div id="termine" style="margin-top: 20px;"></div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("code").addEventListener("input", function() {
+        if (this.value === "XXXX") {
+            document.getElementById("lockscreen").style.display = "none";
+            document.getElementById("mainpage").style.display = "block";
+        }
+    });
+
+    function showAdmin() {
+        document.getElementById("adminpanel").style.display = "block";
+    }
+
+    function checkAdmin() {
+        const pin = document.getElementById("adminpass").value;
+        const termineDiv = document.getElementById("termine");
+        if (pin === "admin123") {
+            const buchungen = [
+                {name: "Max", dauer: 25},
+                {name: "Julia", dauer: 45},
+                {name: "Kevin", dauer: 75}
+            ];
+            buchungen.forEach(b => {
+                let klasse = b.dauer <= 30 ? "kurz" : b.dauer <= 60 ? "mittel" : "lang";
+                let div = document.createElement("div");
+                div.className = "termin " + klasse;
+                div.innerText = `${b.name} – ${b.dauer} Minuten`;
+                termineDiv.appendChild(div);
+            });
+        } else {
+            termineDiv.innerHTML = "<p style='color:red;'>Falsches Passwort!</p>";
+        }
+    }
+</script>
+
+</body>
+</html>
